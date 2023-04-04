@@ -3,6 +3,7 @@ package com.workshop.lina.controlers;
 import com.workshop.lina.config.JwtUtils;
 import com.workshop.lina.dao.UerDao;
 import com.workshop.lina.dto.AuthenticationRequest;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
+
     private final UerDao userDao;
     private final JwtUtils jwtUtils;
 
