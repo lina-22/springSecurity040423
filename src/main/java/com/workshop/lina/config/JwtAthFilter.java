@@ -1,5 +1,6 @@
 package com.workshop.lina.config;
 
+import com.workshop.lina.dao.UerDao;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class JwtAthFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
+    private final UerDao userDao;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -43,7 +44,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
         jwtToken = authHeader.substring(7);
         userEmail = jwtUtils.extractUsername(jwtToken); //TODO to be implemente
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = userDao.findUserByEmail(userEmail);
             if (jwtUtils.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

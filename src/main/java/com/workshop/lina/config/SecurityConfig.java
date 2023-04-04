@@ -1,13 +1,16 @@
 package com.workshop.lina.config;
 
 
+import com.workshop.lina.dao.UerDao;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,20 +35,10 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAthFilter jwtAuthFilter;
+    private final UerDao userDao;
 
 
-    private final static List<UserDetails> APPLICATION_USERS = Arrays.asList(
-            new User(
-                    "lina22@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE ADMIN"))
-            ),
-            new User(
-                    "user22@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE USER"))
-            )
-    );
+
     @Bean
       public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -70,6 +63,11 @@ public class SecurityConfig {
      return authenticationProvider;
     }
 
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
+    }
     @Bean
     public PasswordEncoder passwordEncoder(){
 //      return new BCryptPasswordEncoder();
@@ -81,11 +79,7 @@ public class SecurityConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-                return APPLICATION_USERS
-                        .stream()
-                        .filter(u -> u.getUsername().equals(email))
-                        .findFirst()
-                        .orElseThrow(() -> new UsernameNotFoundException("No user was found"));
+                return userDao.findUserByEmail(email);
             }
         };
     }
