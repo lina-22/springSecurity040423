@@ -1,4 +1,4 @@
-package com.workshop.lina.service;
+package com.workshop.lina.config;
 
 import com.workshop.lina.Repositories.UserRepository;
 import com.workshop.lina.config.JwtUtils;

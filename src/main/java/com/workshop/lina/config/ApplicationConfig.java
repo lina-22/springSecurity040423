@@ -16,11 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
     private UserRepository userRepository;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository
@@ -42,5 +42,9 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        System.out.println("test here....");
+        return config.getAuthenticationManager();
+    }
 }

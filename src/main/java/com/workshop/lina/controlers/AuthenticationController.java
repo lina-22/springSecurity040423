@@ -3,7 +3,7 @@ package com.workshop.lina.controlers;
 import com.workshop.lina.dto.AuthenticationResponse;
 import com.workshop.lina.dto.RegisterRequest;
 import com.workshop.lina.dto.AuthenticationRequest;
-import com.workshop.lina.service.AuthenticationService;
+import com.workshop.lina.config.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
