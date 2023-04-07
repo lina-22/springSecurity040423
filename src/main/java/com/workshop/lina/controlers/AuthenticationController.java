@@ -1,15 +1,11 @@
 package com.workshop.lina.controlers;
 
-import com.workshop.lina.config.JwtUtils;
-import com.workshop.lina.dao.UerDao;
+import com.workshop.lina.dto.AuthenticationResponse;
+import com.workshop.lina.dto.RegisterRequest;
 import com.workshop.lina.dto.AuthenticationRequest;
-import lombok.NoArgsConstructor;
+import com.workshop.lina.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,27 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
-    private final UerDao userDao;
-    private final JwtUtils jwtUtils;
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody RegisterRequest request) {
+        System.out.println("test :" + request.toString());
+        return ResponseEntity.ok(authenticationService.register(request));
+    }
 
-@PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(
-            @RequestBody AuthenticationRequest request)
-
-
-    {
-       authenticationManager.authenticate(
-               new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-       );
-
-       final UserDetails user = userDao.findUserByEmail(request.getEmail());
-
-       if (user != null){
-           return ResponseEntity.ok(jwtUtils.generateToken(user));
-
-       }
-       return ResponseEntity.status(400).body("Some error has occurred");
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody AuthenticationRequest request) {
+        System.out.println("test :" + request.toString());
+        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }
